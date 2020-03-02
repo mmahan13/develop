@@ -17,9 +17,4 @@
         @include('factura.ver_factura_modal')
 </script>
 
-<script type="text/ng-template" id="ver-trimestre-total-modal.html">
-        @include('factura.ver_trimestre_total_modal')
-</script>
-<script type="text/ng-template" id="comentario-modal.html">
-        @include('modals.comentario_modal')
-</script>
+

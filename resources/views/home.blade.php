@@ -11,6 +11,7 @@
         @include('Usuarios.listado_usuarios')
         @include('articulos.lista_articulos')
         @include('factura.nueva_factura')
+        @include('factura.listado_facturas')
         
     </div>
 </div>
