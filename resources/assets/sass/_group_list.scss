@@ -1,0 +1,21 @@
+.left-menu-item-selected {
+  background-color: #2d345ccc !important;
+  a {
+    color: white !important;
+    font-weight: bold;
+    font-style: normal;
+  }
+}
+
+ul.list-group {
+  li.list-group-item {
+    a {
+      display: block;
+      height: 100%;
+      text-decoration: none;
+    }
+    a:focus{
+      text-decoration: none !important;
+    }
+  }
+}

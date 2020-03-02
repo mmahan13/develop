@@ -1,0 +1,19 @@
+.login-form {
+  margin-top: 100px;
+  border-color: darken(whitesmoke, 10%);
+  box-shadow: 0 2px 2px darken(whitesmoke, 30%);
+  div.panel-heading {
+    max-height: 80px;
+    background-color: whitesmoke;
+    p {
+      font-size: large;
+      font-weight: bolder;
+    }
+  }
+  img {
+    position: absolute;
+    left: 45%;
+    transform: translateY(-60px);
+  }
+}
+

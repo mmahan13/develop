@@ -1,0 +1,49 @@
+.btn-primary {
+  background-color: $button-bg-color;
+  border-color: $button-border-color;
+  width: 100%;
+  text-transform: uppercase;
+  margin-top: 5px;
+  padding: 10px;
+  &:focus,
+  &.focus {
+    color: $sidebar-font-color;
+    background-color: darken($button-bg-color, 10%);
+    border-color: darken($button-border-color, 25%);
+  }
+  &:hover {
+    color: $sidebar-font-color;
+    background-color: darken($button-bg-color, 10%);
+    border-color: darken($button-border-color, 12%);
+  }
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    color: $sidebar-font-color;
+    background-color: darken($button-bg-color, 10%);
+    border-color: darken($button-border-color, 12%);
+
+    &:hover,
+    &:focus,
+    &.focus {
+      color: $sidebar-font-color;
+      background-color: darken($button-bg-color, 17%);
+      border-color: darken($button-border-color, 25%);
+    }
+  }
+  &:active,
+  &.active,
+  .open > &.dropdown-toggle {
+    background-image: none;
+  }
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &:hover,
+    &:focus,
+    &.focus {
+      background-color: $button-bg-color;
+      border-color: $button-border-color;
+    }
+  }
+}

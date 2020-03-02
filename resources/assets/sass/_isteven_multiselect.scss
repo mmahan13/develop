@@ -1,0 +1,16 @@
+.multiSelect > button {
+  min-width: 100%;
+}
+
+.multiSelect {
+  .multiSelectItem:not(.multiSelectGroup).selected {
+    background-image: linear-gradient(#8eb4cb, darken(#8eb4cb, 10%));
+    color: white;
+  }
+  .multiSelectItem:hover, .multiSelectGroup:hover {
+    background-image: linear-gradient(#167ec1, #167ec1) !important;
+    color: #fff !important;
+    cursor: pointer;
+    border: none;
+  }
+}
