@@ -1,5 +1,6 @@
 <div class="modal-header">
   <h5>Nuevo cliente</h5>
+  
   <button type="button" class="close" data-dismiss="modal"ng-click="$ctrl.cancel($event)"><span aria-hidden="true">&times;</span></button>
 </div>
 <form name="editar_cliente" method="post" class="form-horizontal" role="form" id="clienteForm">
