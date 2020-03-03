@@ -1,20 +1,27 @@
-<?php 
+<?php
 
 namespace App\libraries;
 
-//use App\Http\Controllers\QrCodeController;
-use Fpdf;
+use Anouar\Fpdf\Fpdf;
+
 
 class PdfInvoice extends Fpdf
 {
-    protected $content;
-    protected $multi_pages = false;
     const MAX_ROWS = 100;
     const InitialY = 75;
+    /**
+     * @var
+     */
+    protected $content;
+    /**
+     * @var bool
+     */
+    protected $multi_pages = false;
     protected $total_import;
     protected $current_margin;
     protected $total_iva = [0 => [], 1 => [], 2 => []];
     protected $footer;
+    protected $creditocaucion = false;
 
     /**
      * Load Data to render invoice
@@ -22,11 +29,11 @@ class PdfInvoice extends Fpdf
      */
     public function LoadData(array $invoice_content)
     {
-      
+        
         $this->content = $invoice_content;
-        //$this->SetY(75);
-        //$this->SetX(15);
-        //$this->SetFont('Arial', 'B', 8);
+        $this->SetY(75);
+        $this->SetX(15);
+        $this->SetFont('Arial', 'B', 8);
     }
 
     /**
@@ -34,115 +41,301 @@ class PdfInvoice extends Fpdf
      */
     function Header()
     {
-        //$this->Image(public_path() . '/img/logo_lsh_291x412.png', 25, 10, 40, 30);
-        $this->SetFont('Arial', 'B', '10');
-        $this->Cell(100);
-        // Título
-        $this->Cell(40, 5, 'Periodo', 1, 0, 'C');
-        $this->Cell(25, 5, utf8_decode('Factura Nº'), 1, 0, 'C');
-        $this->Cell(25, 5, utf8_decode('Página'), 1, 0, 'C');
-        // Salto de línea
+        
+        
+        //cabeceras
+        $this->diraccionfacturacion = "Dirección facturación";
+        $this->fechafactura = "Fecha Factura:";
+        $this->numerofactura = "Nº Factura:";
+        $this->pagina = "Página:";
+        $this->observaciones = "Observaciones:";
+        //tablaarticulos
+        $this->referencia = "REFERENCIA";
+        $this->descripcion ="DESCRIPCIÓN";
+        $this->cantidad ="CANTIDAD";
+        $this->preciounitario ="PRECIO";
+        $this->pordescuento ="% Desc";
+        $this->totaleuros ="TOTAL EUR";
+            
+        /*if($this->content['cabecera'][0]->seriefactura == 'TM'){
+            $this->Image(public_path().'/img/logo_101.gif', 145, 8, 50, 22);
+        }
+        if($this->content['cabecera'][0]->seriefactura == 'TO'){
+            $this->Image(public_path().'/img/logo202.gif', 145, 8, 50, 22);
+        }
+        if($this->content['cabecera'][0]->seriefactura == ''){
+            $this->Image(public_path().'/img/logo_color.jpg', 135, 8, 65, 19);
+        }*/
+        
+        
+        $this->SetFont('Arial', 'B', 16);
+        $this->Text(159,41, 'F');
+        $this->Text(164,41, 'A');
+        $this->Text(169,41, 'C');
+        $this->Text(174,41, 'T');
+        $this->Text(179,41, 'U');
+        $this->Text(184,41, 'R');
+        $this->Text(189,41, 'A');
+        
+        $this->Ln(1);
+        $this->SetFont('Arial', 'B', 11);
+        $this->Cell(0, 5, utf8_decode('Manuel'), 0, 0, 'I');
+
         $this->Ln(5);
-        $this->Cell(100);
-        $this->SetFont('Arial', '', 8);
-        $this->Cell(40, 5, $this->content['proveedor']['FechaFactura'], 1, 0, 'C');
-        //$this->Cell(25, 5, $this->content['number'], 1, 0, 'C');
-        $this->Cell(25, 5, $this->PageNo() . '/{nb}', 1, 0, 'C');
+        $this->SetFont('Arial', 'B',11);
+        $this->Cell(0, 5, utf8_decode('Fernandez Caballero'), 0, 0, 'I');
 
-        $this->Ln(15);
-        $this->SetFont('Arial', '', 10);
-        $this->Text($this->GetX() + 5, $this->GetY() - 1, 'PROVEEDOR');
-        $this->Text($this->GetX() + 115, $this->GetY() - 1, 'CLIENTE');
-        $this->SetFont('Arial', 'B', 8);
+
+        $this->Ln(5);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Text(11,24, 'Dir.:');
+        $this->SetFont('Arial', '', 9);
+        $this->Text(20,24, utf8_decode('Calle de los militares 10, Burgos. España.'));
+        
+        $this->Ln(5);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Text(11,28, 'CIF.:');
+        $this->SetFont('Arial', '', 9);
+        $this->Text(20,28, utf8_decode('V-56987456'));
+        
+        $this->Ln(5);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Text(11,32, 'Tel.:');
+        $this->SetFont('Arial', '', 9);
+        $this->Text(20,32, utf8_decode('636118911'));
+        
+        $this->Ln(1);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Text(11,36, 'Mail.:');
+        $this->SetFont('Arial', '', 9);
+        $this->Text(20,36, utf8_decode("manuel@gmail.com"));
+
+
         $this->clientAddress();
+
+        $this->Ln(10);
         $this->SetFont('Arial', 'B', 8);
-
-        $this->Ln(-25);
-        $this->Cell(110);
-        $this->FuturenerAddress();
-
+        $this->Cell(22, 6, utf8_decode($this->fechafactura), 0, 0, 'R');
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(25, 6, utf8_decode($this->content['cabecera']['fechafactura']), 0, 0, 'L');
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(25, 6, utf8_decode($this->numerofactura), 0, 0, 'R');
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(25, 6, utf8_decode($this->content['cabecera']['numerofactura']), 0, 0, 'L');
+        $this->Ln(4);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(23, 6, utf8_decode($this->observaciones), 0, 0, 'L');
+        $this->Cell(60, 6, utf8_decode('falta observación'), 0, 0, 'L');
     }
+
+    protected function clientAddress()
+    {   
+        $this->Line(10, 45, 210-10, 45);    
+        $this->Ln(15);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(13, 6, 'Cliente.:', 0, 0, 'L');
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(16, 6, utf8_decode($this->content['cabecera']['razonsocial']), 0, 0, 'L');
+        
+        $this->Ln(4);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(13, 6, 'CIF:', 0, 0, 'L');
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(16, 6, utf8_decode($this->content['cabecera']['cifdni']), 0, 0, 'L');
+        
+
+        $this->Ln(4);
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(13, 6, utf8_decode('Dirección:'), 0, 0, 'L');
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(19, 6, utf8_decode('Calle de la libertad 11'), 0, 0, 'L');
+        $this->Line(10, 63, 210-10, 63);
+    }
+
+
 
     /**
      * Page Footer
      */
     function Footer()
     {
-        if ($this->footer) {
-            $this->SetY(-45);
-            $this->Cell(5);
-            $this->SetFont('Arial', 'B', 8);
-            $this->Cell(30, 5, utf8_decode('BASE IMPONIBLE'), 1, 0, 'C');
-            $this->Cell(10, 5, utf8_decode('IVA'), 1, 0, 'C');
-            $this->Cell(30, 5, utf8_decode('TOTAL IVA'), 1, 0, 'C');
-            $this->Ln(5);
-            $this->Cell(5);
+       
+        if ($this->footer)
+        {
+            $this->SetY(250);
+            $this->Line(10, 250, 210-10, 250);
+            $this->Ln(2);
             $this->SetFont('Arial', '', 8);
-            $this->Cell(30, 5,
-                number_format(array_sum($this->total_iva[1]), 2, ',', '.'), 1, 0, 'C');
-            $this->Cell(10, 5,
-                utf8_decode($this->content['proveedor']['IVA'] . '%'), 1, 0, 'C');
-            $iva_group_1 = array_sum($this->total_iva[1]) * $this->content['proveedor']['IVA'] / 100;
-            $this->Cell(30, 5,
-                number_format($iva_group_1, 2, ',', '.'), 1, 0, 'C');
-
-//            $this->Ln(10);
-//            $this->Cell(5);
-//            $this->SetFont('Arial', 'B', 8);
-//            $this->Cell(20, 5, utf8_decode('IMPORTE'), 1, 0, 'C');
-//
-//            $this->SetFont('Arial', '', 8);
-//
-//            $this->Ln(5);
-//            $this->Cell(5);
-//            $this->Cell(20, 5,
-//                number_format($iva_group_1 + $this->total_import, 2, ',', '.'), 1, 0, 'C');
-
-            $this->Ln(-5);
-//            $this->Cell(129);
-//            $this->Cell(30, 5, 'IMPORTE BRUTO', 'LT', 0, 'L');
-//            $this->Cell(30, 5, utf8_decode(
-//                number_format($this->total_import, 2, ',', '.')), 'TR', 0, 'C');
-//            $this->Ln(5);
-            $this->Cell(129);
-            $this->Cell(30, 5, 'BASE IMPONIBLE', 'LT', 0, 'L');
-            $this->Cell(30, 5,
-                number_format($this->total_import, 2, ',', '.'), 'RT', 0, 'C');
-            /*if ($this->content['proveedor']['IRPF'] != 0) {
+           
+            $this->tableImportesIvas(array());
+            $this->Ln(2);
+    
+            foreach ($this->content['totalesiva'] as $line) 
+            {
+                $this->SetTextColor(0,0,0);
+                $this->SetFont('Arial', '', 8);
+                $this->Cell(20, 5, utf8_decode($line['tipoiva']), '', 0, 'L');
+                $this->Cell(20, 5, number_format((float)$line['total_importe'], 2, ',', '.'), '', 0, 'R'); 
+                $this->Cell(20, 5, utf8_decode($line['porcentaje']), '', 0, 'R');
+                $this->Cell(20, 5, number_format((float)$line['total_iva'], 2, ',', '.'), '', 0, 'R'); 
                 $this->Ln(5);
-                $this->Cell(129);
-                $this->Cell(30, 5, '- ' . $this->content['proveedor']['IRPF'] . '% IRPF', 'L', 0, 'L');
-                $this->Cell(30, 5,number_format($this->total_import * $this->content['proveedor']['IRPF'] / 100, 2, ',', '.'), 'R', 0, 'C');
-            }*/
-            /*$this->Cell(30, 5,
-                utf8_decode(number_format($this->total_import -
-                    ($this->total_import * $this->content['proveedor']['IRPF'] / 100), 2, ',', '.')),
-                'R', 0, 'C');*/
-            $this->Ln(5);
-            $this->Cell(129);
-            $this->Cell(30, 5, 'TOTAL I.V.A.', 'L', 0, 'L');
-            $this->Cell(30, 5, number_format($iva_group_1, 2, ',', '.'), 'R', 0, 'C');
-            $this->SetFont('Arial', 'B', 8);
-            $this->Ln(5);
-            $this->Cell(129);
-            $this->Cell(30, 5, 'TOTAL FACTURA EUROS', 'LTB', 0, 'L');
-//            $this->Cell(30, 5,
-//                number_format($iva_group_1 + $this->total_import, 2, ',', '.'), 'TRB', 0, 'C');
-            //$this->Cell(30, 5,number_format($iva_group_1 + $this->total_import-($this->total_import * $this->content['proveedor']['IRPF'] / 100), 2, ',', '.'),'TRB', 0, 'C');
+            }
+         
+ 
+            $this->Ln(2);
+            $this->SetFont('Arial', '', 8);
+           
+                $this->Cell(140, -38,'', 0, 0, 'L');
+                $this->SetFont('Arial', 'B', 9);
+                $this->Cell(20, -38,'Importe Bruto:', 0, 0, 'R');
+                $this->SetFont('Arial', '', 9);
+                $this->Cell(30, -38,number_format((float)$this->content['cabecera']['importebruto'], 2, ',', '.'), 0, 0, 'R');
+                
+                if($this->content['cabecera']['pordescuento'] > 0){
+                    $this->Ln(3);
+                    $this->Cell(140, -35,'', 0, 0, 'L');
+                    $this->SetFont('Arial', 'B', 9);
+                    $this->Cell(20, -35,'% Desc:', 0, 0, 'R');
+                    $this->SetFont('Arial', '', 9);
+                    $this->Cell(30, -35,$this->content['cabecera']['pordescuento'], 0, 0, 'R');
+                }
+               
 
-            $this->Ln(5);
-            $this->Cell(5);
+                $this->Ln(3);
+                $this->Cell(140, -32,'', 0, 0, 'L');
+                $this->SetFont('Arial', 'B', 9);
+                $this->Cell(20, -32,'Base imponible:', 0, 0, 'R');
+                $this->SetFont('Arial', '', 9);
+                $this->Cell(30, -32,number_format((float)$this->content['cabecera']['baseimponible'], 2, ',', '.'), 0, 0, 'R');
+
+                $this->Ln(3);
+                $this->Cell(140, -29,'', 0, 0, 'L');
+                $this->SetFont('Arial', 'B', 9);
+                $this->Cell(20, -29,'Total IVA', 0, 0, 'R');
+                $this->SetFont('Arial', '', 9);
+                $this->Cell(30, -29,number_format((float)$this->content['cabecera']['totaliva'], 2, ',', '.'), 0, 0, 'R');
+
+                
+                $this->Ln(3);
+                $this->Cell(140, -26,'', 0, 0, 'C');
+                $this->SetFont('Arial', 'B', 9);
+                $this->Cell(20, -26,'Total Factura (EUR):',0,0,'R');
+                $this->SetFont('Arial', '', 9);
+                $this->Cell(30, -26,number_format((float)$this->content['cabecera']['importeliquido'], 2, ',', '.'), 0, 0, 'R');
+
+                $this->Ln(3);
+                $this->Line(10, 282, 210-10, 282);
+
+          
+            
+        }else{
+            $this->SetY(100); 
+            $this->Ln(170);  
             $this->SetFont('Arial', 'B', 8);
-            $this->Cell(30, 5, '', 0, 0, 'L');
-        } else {
-            $this->SetFont('Arial', 'B', 14);
-            $this->SetXY(150, -20);
-            $this->Cell(200, 5, 'Suma y sigue...');
-            $this->SetXY(20, -50);
-            // $this->FuturenerAddress();
+            $this->Cell(180, 5, utf8_decode('Suma y sigue...'), 0, 0, 'R');
         }
+    }    
+
+         
+
+    /**
+     *
+     */
+    public function bodyTable()
+    {
+        $height_count = 0;
+        $total_margin = [];
+
+        $this->tableHeader(array());
+        $this->Ln(8);
+
+       
+        foreach ($this->content['lineas'] as $line) {
+
+            // Check if new page was added
+            if ($this->multi_pages) {
+                $this->tableHeader(array());
+                // Reset counters
+                $height_count = 0;
+                $total_margin = [];
+            }
+            $this->current_margin = array_sum($total_margin);
+
+            if ($height_count > 0) {
+                $this->Ln(5);
+            }
+           
+            $this->SetX(10);
+            $this->SetFont('Arial', '', 9);
+           
+                $this->SetTextColor(0,0,0);
+                $this->SetFont('Arial', '', 8);
+                $this->Cell(35, 5, utf8_decode($line['codigoarticulo']), '', 0, 'L');
+                $this->Cell(70, 5, utf8_decode($this->truncate($line['descripcionarticulo'], 100)), '', 'L');
+                $this->Cell(20, 5, ($line['cantidad'] > 0) ? number_format((int)$line['cantidad']):'', '', 0, 'R');
+                $this->Cell(28, 5, number_format((float)$line['precioventa'], 2, ',', '.'), '', 0, 'R'); 
+                $this->Cell(13, 5, ($line['descuento'] > 0) ? $line['descuento']:'', '', 0, 'R'); 
+                $this->Cell(25, 5, ($line['liquidolinea'] > 0) ? number_format((float)$line['liquidolinea'], 2, ',', '.'):'', '', 0, 'R');
+            
+            // Counters
+            $total_margin[] = 5;
+            $height_count += 5;
+
+            // Check if margin for multi pages is reached
+            if ($this->GetY() > 250) {
+                $this->SetTextColor(0,0,0);
+                $this->tableClosure();
+                $this->footer = false;
+                $this->creditocaucion = false;
+                $this->AddPage();
+                $this->multi_pages = true;
+            } else {
+                $this->footer = true;
+                $this->creditocaucion = true;
+                $this->multi_pages = false;
+            }
+
+        }
+
+        $this->totalRow();
+        $this->tableClosure();
+
+      
     }
 
+    protected function tableHeader(array $lines)
+    {
+        $this->SetY(80);
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(35, 10, utf8_decode($this->referencia), 'TB', 0, 'L');
+        $this->Cell(70, 10, utf8_decode($this->descripcion), 'TB', 0, 'L');
+        $this->Cell(20, 10, utf8_decode($this->cantidad), 'TB', 0, 'R');
+        $this->Cell(28, 10, utf8_decode($this->preciounitario), 'TB', 0, 'R');
+        $this->Cell(13, 10, utf8_decode($this->pordescuento), 'TB', 0, 'R');
+        $this->Cell(25, 10, utf8_decode($this->totaleuros), 'TB', 0, 'R');
+        $this->SetY($this->GetY() + 11);
+    }
+
+    protected function blankRow()
+    {
+        $this->Cell(35, 5, '', '', 0, 'L');
+        $this->Cell(70, 5, '', '', 0, 'L');
+        $this->Cell(20, 5, '', '', 0, 'R');
+        $this->Cell(28, 5, '', '', 0, 'R');
+        $this->Cell(13, 5, '', '', 0, 'R');
+        $this->Cell(25, 5, '', '', 0, 'R');
+        $this->Ln(5);
+    }
+
+    protected function tableImportesIvas()
+    {
+        $this->SetFont('Arial', 'B', 9);
+        $this->Cell(20, 10, utf8_decode('Tipo IVA'), 'B', 0, 'L');
+        $this->Cell(20, 10, utf8_decode('Base Imponible'), 'B', 0, 'L');
+        $this->Cell(20, 10, utf8_decode('%IVA'), 'B', 0, 'R');
+        $this->Cell(20, 10, utf8_decode('Total IVA'), 'B', 0, 'R');
+        $this->Ln(10);
+    }
 
     /**
      * @param string $string
@@ -166,84 +359,27 @@ class PdfInvoice extends Fpdf
         return implode(array_slice($parts, 0, $last_part));
     }
 
-    /**
-     * Body
-     */
-    public function bodyTable()
-    {
-
-        $height_count = 0;
-        $total_margin = [];
-
-        $this->tableHeader(array());
-
-        
-    }
-
-    protected function blankRow()
-    {
-        $this->Cell(20, 5, '', 'LR', 0, 'C');
-        $this->Cell(100, 5, '', 'LR', 0, 'C');
-        $this->Cell(15, 5, '', 'LR', 0, 'C');
-        $this->Cell(15, 5, '', 'LR', 0, 'C');
-        $this->Cell(10, 5, '', 'LR', 0, 'C');
-        $this->Cell(12, 5, '', 'LR', 0, 'C');
-        $this->Cell(20, 5, '', 'LR', 0, 'C');
-        $this->Ln(5);
-    }
-
     protected function tableClosure()
     {
         $margin = 115 - $this->current_margin;
-        $this->Cell(170, $margin, '', 'LRB', 0, 'C');
-        $this->Cell(20, $margin, '', 'LRB', 0, 'C');
-        $this->Cell(20, $margin, '', 'LRB', 0, 'C');
-    }
-
-    protected function tableHeader(array $lines)
-    {
-        $this->SetY(65);
-        $this->SetFont('Arial', 'B', 8);
-        $this->Cell(170, 5, utf8_decode('Descripción'), 1, 0, 'C');
-        $this->Cell(20, 5, utf8_decode('Importe EUR'), 1, 0, 'C');
-        $this->SetY($this->GetY() + 5);
+        $this->Ln(5);
+        $this->Cell(35, $margin, '', '', 0, 'L');
+        $this->Cell(70, $margin, '', '', 0, 'L');
+        $this->Cell(20, $margin, '', '', 0, 'R');
+        $this->Cell(18, $margin, '', '', 0, 'R');
+        $this->Cell(13, $margin, '', '', 0, 'R');
+        $this->Cell(25, $margin, '', '', 0, 'R');
     }
 
     protected function totalRow()
     {
         $this->Ln(5);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(20, 5, utf8_decode(''), 'LR', 0, 'C');
-        $this->Cell(100, 5, utf8_decode('TOTAL'), 'LR', 0, 'L');
-        $this->Cell(15, 5, utf8_decode(''), 'LR', 0, 'C');
-        $this->Cell(15, 5, utf8_decode(''), 'LR', 0, 'C');
-        $this->Cell(10, 5, utf8_decode(''), 'LR', 0, 'C');
-        $this->Cell(12, 5, utf8_decode(''), 'LR', 0, 'C');
-        $this->Cell(20, 5, utf8_decode(number_format($this->total_import +
-            array_sum($this->total_iva[1]) * $this->content['proveedor']['IVA'] / 100, 2, ',', '.')),
-            'LR', 0, 'C');
-
-    }
-
-    protected function FuturenerAddress()
-    {
-        $this->MultiCell(73, 5,
-            utf8_decode(
-                'Futurener Consultora S.L.' . "\n" .
-                'B-86153947' . "\n" .
-                'C/ esperanza macarena 21 A' . "\n" .
-                '28021 - Madrid - España' . "\n" .
-                'TELF: 91 772 99 06' . "\n"
-            ), 1, 'L', false);
-    }
-
-    protected function clientAddress()
-    {
-        $this->MultiCell(70, 5,
-            utf8_decode(
-                $this->content['proveedor']['RazonSocial'] . "\n" .
-                $this->content['proveedor']['Domicilio'] . "\n" .
-                'CIF: ' . $this->content['proveedor']['CifDni']
-            ), 1, 'L', false);
+        $this->Cell(35, 5, utf8_decode(''), '', 0, 'L');
+        $this->Cell(70, 5, utf8_decode(''), '', 0, 'L');
+        $this->Cell(20, 5, utf8_decode(''), '', 0, 'R');
+        $this->Cell(18, 5, utf8_decode(''), '', 0, 'R');
+        $this->Cell(13, 5, utf8_decode(''), '', 0, 'R');
+        $this->Cell(25, 5, utf8_decode(''), '', 0, 'R');
     }
 }

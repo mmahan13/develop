@@ -61,6 +61,14 @@ erp.service('facturaService', ['$http','FileSaver', '$rootScope', function ($htt
         return $http.get('/tipo/factura');
     }
 
+    /*this.crearPDF = function(data)
+    {
+        if(angular.isObject(data))
+        {
+            return $http.post('/crear/pdf', data);
+        }
+    }*/
+
     this.crearPDF = function (data) 
     {
         console.log(data);

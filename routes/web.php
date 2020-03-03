@@ -120,7 +120,7 @@ Route::post('/lista/facturas/total/trimestre', 'FacturaController@listaFacturasT
 Route::post('/get/datos/financieros', 'FacturaController@getDatosFinancieros');
 Route::post('/lista/lotes/factura/cliente', 'FacturaController@listaLotesFacturaCliente');
 Route::get('/tipo/factura', 'FacturaController@tipoFactura');
-Route::post('/crear/pdf', 'FacturaController@crearPdf');
+Route::post('/crear/pdf', 'PdfController@getPdfInvoice');
 /*----------------------------------------------------------------------------------------*/
 //ofertas
 Route::post('/numero/oferta', 'OfertasController@numeroOferta');

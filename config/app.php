@@ -163,7 +163,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Laravel\Tinker\TinkerServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
-        Codedge\Fpdf\FpdfServiceProvider::class,
+        Anouar\Fpdf\FpdfServiceProvider::class,
+       
     ],
 
     /*
@@ -213,7 +214,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'DPDF' => Barryvdh\DomPDF\Facade::class,
-        'Fpdf' => Codedge\Fpdf\Facades\Fpdf::class, 
+        'Fpdf' => Anouar\Fpdf\Facades\Fpdf::class,
+         
 
     ],
 
