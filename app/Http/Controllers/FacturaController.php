@@ -19,13 +19,11 @@ use App\Traits\PdfTrait;
 use App\CabeceraFactura;
 use App\LineasFactura;
 use App\Contador;
-
+use App\TotalesPorIva;
 
 class FacturaController extends Controller
 {
 	use PdfTrait;
-    
-
 
     public function numeroFactura(Request $request)
     {
@@ -67,23 +65,13 @@ class FacturaController extends Controller
         }   
     }
 
-    public function totalesIvasFactura(Request $request)
-    {   
-        try{   
-
-            return DB::select('exec ventas.totales_iva_factura ?', [$request['idfactura']]);
-        
-        }catch(Exception $e){
-          return response('Error',500);
-        }   
-    }
-
+    
 
     
     public function guardarFactura(Request $request)
     {
         try{
-            
+  
             if(!isset($request['numerofactura']))
             {
                 $contador = Contador::first();
@@ -101,6 +89,7 @@ class FacturaController extends Controller
             $cabecera_factura->fecha_factura = (isset($request['fecha'])) ? $request['fecha']: date('Ymd');
             $cabecera_factura->importebruto  = (isset($request['importebruto'])) ? $request['importebruto']:0;
             $cabecera_factura->pordescuento  = (isset($request['pordescuento'])) ? $request['pordescuento']:0;
+            $cabecera_factura->importedescuento  = (isset($request['descuentototalfactura'])) ? $request['descuentototalfactura']:0;
             $cabecera_factura->baseimponible = (isset($request['baseimponible'])) ? $request['baseimponible']:0;
             $cabecera_factura->totaliva = (isset($request['totaliva'])) ? $request['totaliva']:0;
             $cabecera_factura->totalfactura = (isset($request['totalfactura'])) ? $request['totalfactura']:0;
@@ -130,8 +119,25 @@ class FacturaController extends Controller
                     $lineas_factura->save();
 
             }
-              $data['cabecera_factura'] = $cabecera_factura;
-              return $data;
+
+            foreach ($request['totales_por_iva'] as $totales)
+            {
+             
+                if($totales['total_importe'] > 0 && $totales['total_iva'] > 0)
+                {
+                    $totalesiva = new TotalesPorIva;
+                    $totalesiva->id_cabecera_factura = $cabecera_factura->id;
+                    $totalesiva->id_cliente = $request['idcliente'];
+                    $totalesiva->tipoiva = $totales['tipoiva'];
+                    $totalesiva->porcentaje = $totales['porcentaje'];
+                    $totalesiva->total_iva = $totales['total_iva'];
+                    $totalesiva->total_importe = $totales['total_importe'];
+                    $totalesiva->save();
+                }
+            }
+            
+            $data['cabecera_factura'] = $cabecera_factura;
+            return $data;
            
            
             
@@ -217,10 +223,7 @@ class FacturaController extends Controller
 
 	public function crearPdf(Request $request)
     {  
-        print_r($request['facturacabecera']);
-        return $this->generar_factura($request['facturacabecera']/*, $request['totalesiva'], $request['articulos']*/);
-
-       
+        return $this->generar_factura($request['facturacabecera'], $request['totalesiva'], $request['articulos']);
     }
   
 

@@ -8,15 +8,14 @@ use Mockery\Exception;
 
 trait PdfTrait
 {
-    public function generar_factura($datos_factura/*,$totalesiva, $articulos*/)
+    public function generar_factura($datos_factura, $totalesiva, $articulos)
     {
 		try{
-			
 				setlocale(LC_MONETARY, 'es_ES.utf8');
 				$pdf = DPDF::loadView('pdf/factura', [
-		        	'datos_factura' => $datos_factura
-		        	/*'articulos' => $articulos,
-		        	'totalesiva' => $totalesiva*/
+		        	'datos_factura' => $datos_factura,
+		        	'articulos' => $articulos,
+		        	'totalesiva' => $totalesiva
 		        ])->setPaper('a4', 'portrait');
 		     	
 		     	return $pdf->download( 'factura_'. date('Ydm_hi'). '.pdf');

@@ -2,7 +2,7 @@
 <div class="col-lg-10 panel hide" id="listado_facturas_clientes">
     <div class="card">
         <div class="card-header">
-            <h4 class="">Facturas clientes</h4>
+            <h4 class="">Listado Facturas</h4>
         </div>
         <div class="card-body">
              <listado-facturas-clientes></listado-facturas-clientes>

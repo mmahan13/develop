@@ -79,17 +79,12 @@
             @foreach($articulos as $articulo)
                 <tr>
                     <td>{{$articulo['codigoarticulo']}}</td>
-                    <td class="align-left">
-                        {{$articulo['descripcionarticulo']}}
-                         @if($articulo['descripcionlinea'] != null)
-                         <br> * {{$articulo['descripcionlinea']}}
-                         @endif
-                    </td>
-                    <td>{{$articulo['unidades']}}</td>
-                    <td>{{money_format("%.2n", $articulo['precio'])}}</td>
-                    <td>{{$articulo['pordescuento']}}%</td>
+                    <td class="align-left">{{$articulo['descripcionarticulo']}}</td>
+                    <td>{{$articulo['cantidad']}}</td>
+                    <td>{{$articulo['precioventa']}}</td>
+                    <td>{{$articulo['descuento']}}%</td>
                     <td>{{$articulo['poriva']}}%</td>
-                    <td>{{money_format("%.2n", $articulo['importeneto'])}}</td>
+                    <td>{{$articulo['liquidolinea']}}</td>
 
                 </tr>
             </tbody>
@@ -118,9 +113,9 @@
                     @foreach ($totalesiva as $totaliva)
                             <tr>
                                 <td>{{ $totaliva['tipoiva'] or null }}</td>
-                                <td>{{ $totaliva['baseimponible'] or null }}</td>
-                                <td>{{ $totaliva['poriva'] or null }}</td>
-                                <td>{{ $totaliva['cuotaiva'] or null }}</td>
+                                <td>{{ $totaliva['total_importe'] or null }}</td>
+                                <td>{{ $totaliva['porcentaje'] or null }}</td>
+                                <td>{{ $totaliva['total_iva'] or null }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -135,48 +130,48 @@
                    <tbody>
                             <tr>
                                 <td class="cm4" style="text-align: left">IMPORTE BRUTO</td>
-                                <td style="text-align: right;" class="align-left cm3">{{money_format("%.2n",$datos_factura['importenetolineas'])}}</td>
+                                <td style="text-align: right;" class="align-left cm3">{{$datos_factura['importebruto']}}</td>
                             </tr> 
 
                             @if($datos_factura['pordescuento'] > 0)   
                              <tr>
                                 <td class="cm4" style="text-align: left">DTO ({{$datos_factura['pordescuento']}} %)</td>
-                                <td style="text-align: right;" class="align-left cm3">{{money_format("%.2n",$datos_factura['importedescuento'])}}</td>
+                                <td style="text-align: right;" class="align-left cm3">{{$datos_factura['importedescuento']}}</td>
                             </tr> 
                             @endif
                            
                             <tr>
                                 <td class="cm4" style="text-align: left">BASE IMPONIBLE</td>
-                                <td style="text-align: right;" class="align-left cm3">{{money_format("%.2n", $datos_factura['baseimponible'])}}</td>
+                                <td style="text-align: right;" class="align-left cm3">{{$datos_factura['baseimponible']}}</td>
                             </tr>
                             <tr>
                                 <td style="text-align: left">TOTAL I.V.A.</td>
-                                <td style="text-align: right;" class="align-left">{{money_format("%.2n",$datos_factura['totaliva'])}}</td>
+                                <td style="text-align: right;" class="align-left">{{$datos_factura['totaliva']}}</td>
                             </tr>
 
                             @if($datos_factura['importerecargo'] > 0)   
                              <tr>
                                 <td class="cm4" style="text-align: left">RECARGO</td>
-                                <td style="text-align: right;" class="align-left cm3">{{money_format("%.2n",$datos_factura['importerecargo'])}}</td>
+                                <td style="text-align: right;" class="align-left cm3">{{$datos_factura['importerecargo']}}</td>
                             </tr> 
                             @endif
                             @if($datos_factura['importerecargo'] > 0)   
                              <tr>
                                 <td class="cm4" style="text-align: left">SUBTOTAL</td>
-                                <td style="text-align: right;" class="align-left cm3">{{money_format("%.2n",$datos_factura['subtotal'])}}</td>
+                                <td style="text-align: right;" class="align-left cm3">{{$datos_factura['subtotal']}}</td>
                             </tr> 
                             @endif
 
                             @if($datos_factura['porretencion'] > 0)   
                              <tr>
                                 <td class="cm4" style="text-align: left">RETENCIÓN ({{$datos_factura['porretencion']}} %)</td>
-                                <td style="text-align: right;" class="align-left cm3">{{money_format("%.2n",$datos_factura['importeretencion'])}}</td>
+                                <td style="text-align: right;" class="align-left cm3">{{$datos_factura['importeretencion']}}</td>
                             </tr> 
                             @endif
 
                             <tr>
                                 <td style="text-align: left">TOTAL FACTURA</td>
-                                <td style="text-align: right;" class="align-left">{{money_format("%.2n",$datos_factura['importeliquido'])}}</td>
+                                <td style="text-align: right;" class="align-left">{{$datos_factura['importeliquido']}}</td>
                             </tr>
 
                         </tbody>

@@ -1,6 +1,6 @@
 
 <div class="modal-header">
-  <h5> Factura {% $ctrl.numerofactura %}</h5> 
+  <h5> Factura {% $ctrl.seriefactura %}-{% $ctrl.numerofactura %}</h5> 
 
   <!--<button style="float: left;" type="button" class="btn btn-light" ng-click="$ctrl.informacionFinanciera($event, $ctrl.idalbaran)"><i class="fa fa-info-circle" aria-hidden="true"></i> Financiera</button>-->
 
@@ -37,15 +37,16 @@
               <thead>
                   <tr> 
                     <th>Fecha</th>
+                    <th>Serie</th>
                     <th style="text-align: right;">Factura</th>
-                    <th>Tipo</th>
-                   </tr>
+                  </tr>
               </thead>
               <tbody>
                   <tr>
                     <td>{% $ctrl.fechafactura %} </td>
+                    <td>{% $ctrl.seriefactura %} </td> 
                     <td style="text-align: right;">{% $ctrl.numerofactura%} </td>
-                    <td>{% $ctrl.tipo %} </td> 
+                    
                   </tr>
               </tbody>
           </table>
@@ -70,12 +71,12 @@
       <tbody>
           <tr ng-repeat="row in articulo">
              <td style="text-align: right;">{%row.codigoarticulo%}</td>
-             <td>{%row.descripcionarticulo%} <br ng-if="row.descripcionlinea != null"><span ng-if="row.descripcionlinea != null" style="font-size: 12px">* {%row.descripcionlinea.substr(0,140) %}</span><span ng-if="row.descripcionlinea.length > 140"> (<a href="#" ng-click="$ctrl.leerMas($event, row.descripcionlinea)">...</a>)</span></td>
-             <td style="text-align: right;">{%row.unidades%}</td>
-             <td style="text-align: right;">{%row.precio | number:2%}</td>
-             <td style="text-align: right;">{%row.pordescuento%}</td>
-             <td style="text-align: right;">{%row.poriva | number:2%}</td>
-             <td style="text-align: right;">{%row.importeneto | number:2%}</td>
+             <td>{%row.descripcionarticulo%}</td>
+             <td style="text-align: right;">{%row.cantidad%}</td>
+             <td style="text-align: right;">{%row.precioventa | number:2%}</td>
+             <td style="text-align: right;">{%row.descuento%}</td>
+             <td style="text-align: right;">{%row.poriva%}</td>
+             <td style="text-align: right;">{%row.liquidolinea | number:2%}</td>
           </tr>
       </tbody>
       <tfoot>
@@ -100,9 +101,9 @@
               <tbody>
                   <tr ng-repeat="row in ivas">
                       <td>{% row.tipoiva %}</td>
-                      <td style="text-align: right;">{% row.baseimponible  | number:2%}</td>
-                      <td style="text-align: right;">{% row.poriva | number:2%}</td>
-                      <td style="text-align: right;">{% row.cuotaiva | number:2%}</td>
+                      <td style="text-align: right;">{% row.total_importe  | number:2%}</td>
+                      <td style="text-align: right;">{% row.porcentaje%}</td>
+                      <td style="text-align: right;">{% row.total_iva | number:2%}</td>
                   </tr>
                  
 
@@ -124,8 +125,8 @@
                   <p><strong>Total factura</strong></p>
               </div>
               <div class="col">
-                <P style="text-align: right;">{% $ctrl.importenetolineas | number:2%}</P>
-                <P ng-if="$ctrl.pordescuento > 0" style="text-align: right;">{% $ctrl.importedescuento | number:2%}</P>
+                <P style="text-align: right;">{% $ctrl.importebruto | number:2%}</P>
+                <P ng-if="$ctrl.importedescuento > 0" style="text-align: right;">{% $ctrl.importedescuento | number:2%}</P>
                 <P style="text-align: right;">{% $ctrl.baseimponible | number:2%}</P>
                 <P style="text-align: right;">{% $ctrl.totaliva | number:2%}</P>
                 <P ng-if="$ctrl.importerecargo > 0" style="text-align: right;">{% $ctrl.importerecargo | number:2%}</P>

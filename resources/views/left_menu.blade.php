@@ -10,7 +10,7 @@
                 <menu-item name="Mis clientes" panel="listado_usuarios"></menu-item>
                 <menu-item name="Mis productos" panel="lista_articulos"></menu-item>
                 <menu-item name="Crear factura" panel="nueva_factura"></menu-item>
-                <menu-item name="Listado Facturas" panel=" listado_facturas_clientes"></menu-item>
+                <menu-item name="Listado Facturas" panel="listado_facturas_clientes"></menu-item>
         </menu-element>
        
         

@@ -329,6 +329,7 @@ erp.component('nuevaFactura',{
         importesubtotal: ctrl.importesubtotal,
         totalfactura: ctrl.total_factura.toFixed(2),
         articulos: ctrl.lineas_factura,
+        totales_por_iva: ctrl.totales_por_iva
       };
       
     

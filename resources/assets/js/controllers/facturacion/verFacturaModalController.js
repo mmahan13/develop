@@ -1,52 +1,40 @@
 import {erp} from '../../app.js';
 
 erp.controller('verFacturaModalController', ['$rootScope', '$scope', '$uibModal','$uibModalInstance','toastr','facturaService', 'detalle','FileSaver','contratosService',
-    function ($rootScope, $scope, $uibModal,$uibModalInstance, toastr, facturaService, detalle, FileSaver, contratosService){
+'clientes',
+    function ($rootScope, $scope, $uibModal,$uibModalInstance, toastr, facturaService, detalle, FileSaver, contratosService, clientes){
     
     var ctrl = this;
-    console.log(detalle);
-    ctrl.idfactura = detalle.idfactura;
-    ctrl.numerofactrua = detalle.numerofactrua;
     
-    ctrl.fechafactura = detalle.fechafactura;
+    ctrl.id = detalle.id;
     ctrl.numerofactura = detalle.numerofactura;
-    ctrl.tipo = detalle.tipo;
+    ctrl.fechafactura = detalle.fecha_factura;
+    ctrl.seriefactura = detalle.seriefactura;
     
-    ctrl.razonsocial = detalle.razonsocial;
-    ctrl.cifdni = detalle.cifdni;
-    ctrl.codigocliente = detalle.codigocliente;
-    ctrl.codigoempresa = detalle.codigoempresa;
+    clientes.getCliente({id_cliente:detalle.id_cliente}).then(function (response){
+     
+        ctrl.cliente = response.data;
+        ctrl.razonsocial = ctrl.cliente.nombre;
+        ctrl.cifdni = ctrl.cliente.dni;
+    });
+ 
+    
     ctrl.observacionesfactura = detalle.observacionesfactura;
-
     ctrl.importebruto = detalle.importebruto;
-    ctrl.importenetolineas = detalle.importenetolineas;
-    ctrl.importedescuento = detalle.importedescuento | 0;
-    ctrl.importerecargo = detalle.importerecargo | 0;
-    ctrl.porretencion = detalle.porretencion | 0;
-    ctrl.importeretencion = detalle.importeretencion | 0;
+    ctrl.importedescuento = detalle.importedescuento;
+   
     ctrl.subtotal = detalle.subtotal | 0;
     ctrl.pordescuento = detalle.pordescuento | 0;
     ctrl.baseimponible = detalle.baseimponible; 
-    ctrl.totaliva = detalle.cuotaiva;
-    ctrl.importeliquido = detalle.importeliquido
+    ctrl.totaliva = detalle.totaliva;
+    ctrl.importeliquido = detalle.totalfactura
 
 
-    facturaService.getLineasFactura({idfactura:ctrl.idfactura}).then(function (response){
+    facturaService.getLineasFactura({idfactura:ctrl.id}).then(function (response){
           ctrl.articulos = response.data;
-        
-          _.each(ctrl.articulos, function (obj, i)
-          {
-              obj.unidades = parseInt(obj.unidades);
-              obj.precio = parseFloat(obj.precio).toFixed(2);
-              obj.pordescuento = parseInt(obj.pordescuento) | 0;
-              obj.poriva = parseInt(obj.poriva) | 0;
-              obj.importebruto = parseFloat(obj.importebruto).toFixed(2);
-
-          });
-          
     });
     
-    facturaService.totalesIvas({idfactura:ctrl.idfactura}).then(function (response){
+    facturaService.totalesIvas({idfactura:ctrl.id}).then(function (response){
           ctrl.totales_ivas = response.data;
     });
       
@@ -54,7 +42,7 @@ erp.controller('verFacturaModalController', ['$rootScope', '$scope', '$uibModal'
      ctrl.crearPdf = function()
      {
         ctrl.loading = true;
-        let domicilio = ctrl.domicilio+', '+ctrl.codigopostal+', '+ctrl.poblacion+', '+ctrl.provincia;
+        //let domicilio = ctrl.domicilio+', '+ctrl.codigopostal+', '+ctrl.poblacion+', '+ctrl.provincia;
         let factura = {
           numerofactura: ctrl.numerofactura,
               fechafactura: ctrl.fechafactura,

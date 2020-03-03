@@ -5,11 +5,11 @@ erp.service('clientes', ['$http', function ($http) {
         return $http.post('/lista/clientes');
     };
 
-      this.getDomicilios = function (data) {
-        if(angular.isObject(data)){
-            return $http.post('/get/domicilios/cliente', data);
-        }
+    this.getCliente = function (data) {
+        return $http.post('/get/cliente', data);
     };
+
+
 
     this.nuevoCliente = function (data) {
         if(angular.isObject(data)){
@@ -52,6 +52,10 @@ erp.service('clientes', ['$http', function ($http) {
             return $http.post('/lista/facturas/cliente', data);
         }
     };
+
+    this.getListaFacturas = function(){
+    	return $http.get('/get/lista/facturas');
+    }
 
     this.informeAnual = function (data){
         if(angular.isObject(data)){

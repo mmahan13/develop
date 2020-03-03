@@ -56,6 +56,7 @@ Route::get('/listado/usuarios', 'ClienteController@getListadoUsuarios');
 Route::post('/editar/cliente', 'ClienteController@editarCliente');
 Route::post('/crear/cliente', 'ClienteController@crearCliente');
 Route::get('/delete/cliente/{id}', 'ClienteController@deleteCliente');
+Route::post('/get/cliente/', 'ClienteController@getCliente');
 
 //productos
 Route::get('/get/productos', 'ClienteController@getProductos');
@@ -64,11 +65,16 @@ Route::post('/crear/producto', 'ClienteController@crearProducto');
 Route::post('/editar/producto', 'ClienteController@editarProducto');
 Route::get('/delete/producto/{id}', 'ClienteController@deleteProducto');
 
-
+Route::post('/get/lineas/factura', 'ClienteController@lineasFacturas');
+Route::post('/totales/ivas/factura/cliente', 'ClienteController@totalesIvasFactura');
 Route::post('/lista/facturas/cliente', 'ClienteController@facturasCliente');
+Route::get('/get/lista/facturas', 'ClienteController@listaFacturas');
+
+
 Route::post('/informe/anual/facturas', 'ClienteController@informeAnualFacturas');
 Route::post('/infrome/trimestral/facturas', 'ClienteController@informeTrimestralFacturas');
 Route::post('/compras/cliente', 'ClienteController@comprasClientes');
+
 //domicilios cliente
 Route::post('/get/domicilios/cliente', 'ClienteController@getDomiciliosClientes');
 Route::post('/nuevo/cliente', 'ClienteController@nuevoCliente');
@@ -106,9 +112,7 @@ Route::post('/guardar/factura', 'FacturaController@guardarFactura');
 
 
 /*----------------------------------------------------------------------------------------*/
-Route::post('/get/lista/facturas', 'FacturaController@listaFacturas');
-Route::post('/get/lineas/factura', 'FacturaController@lineasFacturas');
-Route::post('/totales/ivas/factura/cliente', 'FacturaController@totalesIvasFactura');
+
 Route::post('/datos/nueva/factura', 'FacturaController@datosNuevaFactura');
 Route::post('/guardar/factura', 'FacturaController@guardarFactura');
 Route::post('/lista/facturas/trimestre', 'FacturaController@listaFacturasTrimestre');

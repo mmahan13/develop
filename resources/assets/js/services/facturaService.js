@@ -13,7 +13,7 @@ erp.service('facturaService', ['$http','FileSaver', '$rootScope', function ($htt
     };
 
     this.getListaFacturas = function(){
-    	return $http.post('/get/lista/facturas')
+    	return $http.get('/get/lista/facturas')
     }
 
     
@@ -63,11 +63,10 @@ erp.service('facturaService', ['$http','FileSaver', '$rootScope', function ($htt
 
     this.crearPDF = function (data) 
     {
+        console.log(data);
         if(angular.isObject(data))
         {
-            
-                var numerofactura = data.numerofactura;
-                var seriefactura = data.seriefactura;
+                var numerofactura = data.facturacabecera.numerofactura;
                 return $http({
                     method: 'post',
                     url: '/crear/pdf',
@@ -79,7 +78,7 @@ erp.service('facturaService', ['$http','FileSaver', '$rootScope', function ($htt
                 {
                     $rootScope.$emit('descargaOK', {ok:1});
                 }
-                FileSaver.saveAs(file, 'factura-'+ numerofactura +'-'+ seriefactura +'.pdf');
+                FileSaver.saveAs(file, 'factura-'+ numerofactura +'.pdf');
             },
         
             function error(response){

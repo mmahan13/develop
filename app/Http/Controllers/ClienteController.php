@@ -19,7 +19,9 @@ use Carbon\Carbon;
 use App\Cliente;
 use App\Product;
 use App\CabeceraFactura;
+use App\LineasFactura;
 use App\TiposIvas;
+use App\TotalesPorIva;
 
 
 class ClienteController extends Controller
@@ -40,6 +42,28 @@ class ClienteController extends Controller
                 return response('Error',500);
         }   
     }
+
+    public function getCliente(Request $request)
+    {
+        try{
+          return Cliente::find($request['id_cliente']);
+        }catch(Exception $e){
+                return response('Error',500);
+        }   
+    }
+
+    public function totalesIvasFactura(Request $request)
+    {   
+        try{   
+
+            return TotalesPorIva::where('id_cabecera_factura',$request['idfactura'])->get(); 
+            
+        
+        }catch(Exception $e){
+          return response('Error',500);
+        }   
+    }
+
 
     public function editarCliente(Request $request)
     {
@@ -167,6 +191,33 @@ class ClienteController extends Controller
             return CabeceraFactura::where('id_cliente',$request['idcliente'])->get();
         }catch(Exception $e){
                 return response('Error',500);
+        }   
+    }
+
+    public function listaFacturas()
+    {
+        try{
+            $userid = auth()->user()->id;
+            if($userid != 1){
+                return CabeceraFactura::where('id_user', $userid)->get();
+            }else{
+                return CabeceraFactura::all();
+            }
+            
+           
+        }catch(Exception $e){
+                return response('Error',500);
+        }   
+    }
+
+    public function lineasFacturas(Request $request)
+    {   
+        try{    
+            
+             return LineasFactura::where('id_cabecera_factura', $request['idfactura'])->get();
+        
+        }catch(Exception $e){
+          return response('Error',500);
         }   
     }
     

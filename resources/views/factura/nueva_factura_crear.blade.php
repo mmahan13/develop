@@ -109,8 +109,8 @@
             <tbody>
                 <tr ng-repeat="row in ivas" ng-if="row.total_importe > 0">
                     <td>{% row.tipoiva %}</td>
-                    <td style="text-align: right;">{% row.total_importe | number: 2 %}</td>
-                    <td style="text-align: right;">{% row.porcentaje |number: 0%}</td>
+                    <td style="text-align: right;">{% row.total_importe | number:2%}</td>
+                    <td style="text-align: right;">{% row.porcentaje%}</td>
                     <td style="text-align: right;">{% row.total_iva | number:2 %}</td>
                 </tr>
                
@@ -126,7 +126,7 @@
                 <p ng-if="$lCtrl.descuentototalfactura > 0"><strong>Dto</strong> <span style="float: right;">{% $lCtrl.descuentototalfactura | number:2 %}</span></p>
                 <p><strong>Base imponible</strong> <span style="float: right;">{% $lCtrl.base_imponible | number: 2 %}</span></p>
                 <p><strong>Total I.V.A</strong> <span style="float: right;">{% $lCtrl.totalIVA | number: 2 %}</span></p>
-                <p ng-if="$lCtrl.importesubtotal >0"><strong>Subtotal</strong> <span style="float: right;">{% $lCtrl.importesubtotal | number: 2 %}</span></p>
+                <p ng-if="$lCtrl.importesubtotal >0"><strong>Subtotal</strong> <span style="float: right;">{% $lCtrl.importesubtotal | number:2 %}</span></p>
                 <!--<p  ng-if="$lCtrl.importeretencion > 0"><strong>Retención</strong> <span style="float: right;">{% $lCtrl.importeretencion | number: 2 %}</span></p>-->
                 <p style="margin-top: 10px"><strong>Total factura</strong> <span style="float: right;">{% $lCtrl.total_factura | number: 2 %}</span></p>
             </div>
