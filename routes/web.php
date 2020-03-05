@@ -121,6 +121,7 @@ Route::post('/get/datos/financieros', 'FacturaController@getDatosFinancieros');
 Route::post('/lista/lotes/factura/cliente', 'FacturaController@listaLotesFacturaCliente');
 Route::get('/tipo/factura', 'FacturaController@tipoFactura');
 Route::post('/crear/pdf', 'PdfController@getPdfInvoice');
+Route::post('/send/pdf', 'PdfController@reeviarFactura');
 /*----------------------------------------------------------------------------------------*/
 //ofertas
 Route::post('/numero/oferta', 'OfertasController@numeroOferta');

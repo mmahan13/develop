@@ -149,6 +149,7 @@
 <div class="modal-footer">
 <i style="font-size: 22px;" class="fa fa-spinner fa-pulse fa-3x fa-fw" ng-if="$ctrl.loading"></i>
 <span ng-if="$ctrl.loading" class="sr-only">Loading...</span>
+ <button class="btn btn-secondary" ng-click="$ctrl.enviarFactura($event)"><i class="fa fa-envelope-o" aria-hidden="true"></i></button>
  <button class="btn btn-secondary" ng-click="$ctrl.crearPdf($event)"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>
  
  <button class="btn btn-secondary" ng-click="$ctrl.cancel($event)">Cerrar</button>

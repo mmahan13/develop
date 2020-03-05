@@ -47,6 +47,7 @@ class PdfInvoice extends Fpdf
         $this->diraccionfacturacion = "Dirección facturación";
         $this->fechafactura = "Fecha Factura:";
         $this->numerofactura = "Nº Factura:";
+        $this->seriefactura = "Serie Factura:";
         $this->pagina = "Página:";
         $this->observaciones = "Observaciones:";
         //tablaarticulos
@@ -54,7 +55,8 @@ class PdfInvoice extends Fpdf
         $this->descripcion ="DESCRIPCIÓN";
         $this->cantidad ="CANTIDAD";
         $this->preciounitario ="PRECIO";
-        $this->pordescuento ="% Desc";
+        $this->pordescuento ="DTO%";
+        $this->iva = 'IVA%';
         $this->totaleuros ="TOTAL EUR";
             
         /*if($this->content['cabecera'][0]->seriefactura == 'TM'){
@@ -79,36 +81,36 @@ class PdfInvoice extends Fpdf
         
         $this->Ln(1);
         $this->SetFont('Arial', 'B', 11);
-        $this->Cell(0, 5, utf8_decode('Manuel'), 0, 0, 'I');
+        $this->Cell(0, 5, utf8_decode(auth()->user()->name), 0, 0, 'I');
 
         $this->Ln(5);
         $this->SetFont('Arial', 'B',11);
-        $this->Cell(0, 5, utf8_decode('Fernandez Caballero'), 0, 0, 'I');
+        $this->Cell(0, 5, utf8_decode(auth()->user()->apellidos), 0, 0, 'I');
 
 
         $this->Ln(5);
         $this->SetFont('Arial', 'B', 9);
         $this->Text(11,24, 'Dir.:');
         $this->SetFont('Arial', '', 9);
-        $this->Text(20,24, utf8_decode('Calle de los militares 10, Burgos. España.'));
+        $this->Text(20,24, utf8_decode(auth()->user()->direccion));
         
         $this->Ln(5);
         $this->SetFont('Arial', 'B', 9);
         $this->Text(11,28, 'CIF.:');
         $this->SetFont('Arial', '', 9);
-        $this->Text(20,28, utf8_decode('V-56987456'));
+        $this->Text(20,28, utf8_decode(auth()->user()->dni));
         
         $this->Ln(5);
         $this->SetFont('Arial', 'B', 9);
         $this->Text(11,32, 'Tel.:');
         $this->SetFont('Arial', '', 9);
-        $this->Text(20,32, utf8_decode('636118911'));
+        $this->Text(20,32, utf8_decode(auth()->user()->telefono));
         
         $this->Ln(1);
         $this->SetFont('Arial', 'B', 9);
-        $this->Text(11,36, 'Mail.:');
+        $this->Text(11,36, 'Email.:');
         $this->SetFont('Arial', '', 9);
-        $this->Text(20,36, utf8_decode("manuel@gmail.com"));
+        $this->Text(22,36, utf8_decode(auth()->user()->email));
 
 
         $this->clientAddress();
@@ -117,15 +119,20 @@ class PdfInvoice extends Fpdf
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(22, 6, utf8_decode($this->fechafactura), 0, 0, 'R');
         $this->SetFont('Arial', '', 8);
-        $this->Cell(25, 6, utf8_decode($this->content['cabecera']['fechafactura']), 0, 0, 'L');
+        $this->Cell(22, 6, utf8_decode($this->content['cabecera']['fechafactura']), 0, 0, 'L');
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(25, 6, utf8_decode($this->numerofactura), 0, 0, 'R');
+        $this->Cell(22, 6, utf8_decode($this->seriefactura), 0, 0, 'R');
         $this->SetFont('Arial', '', 8);
-        $this->Cell(25, 6, utf8_decode($this->content['cabecera']['numerofactura']), 0, 0, 'L');
+        $this->Cell(10, 6, utf8_decode($this->content['cabecera']['seriefactura']), 0, 0, 'L');
+        $this->SetFont('Arial', 'B', 8);
+        $this->Cell(22, 6, utf8_decode($this->numerofactura), 0, 0, 'R');
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(22, 6, utf8_decode($this->content['cabecera']['numerofactura']), 0, 0, 'L');
         $this->Ln(4);
         $this->SetFont('Arial', 'B', 8);
         $this->Cell(23, 6, utf8_decode($this->observaciones), 0, 0, 'L');
-        $this->Cell(60, 6, utf8_decode('falta observación'), 0, 0, 'L');
+        $this->SetFont('Arial', '', 8);
+        $this->Cell(60, 6, utf8_decode($this->content['cabecera']['observacionesfactura']), 0, 0, 'L');
     }
 
     protected function clientAddress()
@@ -146,9 +153,9 @@ class PdfInvoice extends Fpdf
 
         $this->Ln(4);
         $this->SetFont('Arial', 'B', 8);
-        $this->Cell(13, 6, utf8_decode('Dirección:'), 0, 0, 'L');
+        $this->Cell(14, 6, utf8_decode('Dirección:'), 0, 0, 'L');
         $this->SetFont('Arial', '', 8);
-        $this->Cell(19, 6, utf8_decode('Calle de la libertad 11'), 0, 0, 'L');
+        $this->Cell(25, 6, utf8_decode($this->content['cabecera']['direccioncliente']), 0, 0, 'L');
         $this->Line(10, 63, 210-10, 63);
     }
 
@@ -182,7 +189,7 @@ class PdfInvoice extends Fpdf
             }
          
  
-            $this->Ln(2);
+            $this->Ln(5);
             $this->SetFont('Arial', '', 8);
            
                 $this->Cell(140, -38,'', 0, 0, 'L');
@@ -195,9 +202,9 @@ class PdfInvoice extends Fpdf
                     $this->Ln(3);
                     $this->Cell(140, -35,'', 0, 0, 'L');
                     $this->SetFont('Arial', 'B', 9);
-                    $this->Cell(20, -35,'% Desc:', 0, 0, 'R');
+                    $this->Cell(20, -35,'Desc:('.$this->content['cabecera']['pordescuento'].'%)', 0, 0, 'R');
                     $this->SetFont('Arial', '', 9);
-                    $this->Cell(30, -35,$this->content['cabecera']['pordescuento'], 0, 0, 'R');
+                    $this->Cell(30, -35,number_format((float)$this->content['cabecera']['importedescuento'], 2, ',', '.'), 0, 0, 'R');
                 }
                
 
@@ -247,7 +254,7 @@ class PdfInvoice extends Fpdf
         $total_margin = [];
 
         $this->tableHeader(array());
-        $this->Ln(8);
+        $this->Ln(4);
 
        
         foreach ($this->content['lineas'] as $line) {
@@ -270,11 +277,12 @@ class PdfInvoice extends Fpdf
            
                 $this->SetTextColor(0,0,0);
                 $this->SetFont('Arial', '', 8);
-                $this->Cell(35, 5, utf8_decode($line['codigoarticulo']), '', 0, 'L');
+                $this->Cell(31, 5, utf8_decode($line['codigoarticulo']), '', 0, 'L');
                 $this->Cell(70, 5, utf8_decode($this->truncate($line['descripcionarticulo'], 100)), '', 'L');
                 $this->Cell(20, 5, ($line['cantidad'] > 0) ? number_format((int)$line['cantidad']):'', '', 0, 'R');
-                $this->Cell(28, 5, number_format((float)$line['precioventa'], 2, ',', '.'), '', 0, 'R'); 
-                $this->Cell(13, 5, ($line['descuento'] > 0) ? $line['descuento']:'', '', 0, 'R'); 
+                $this->Cell(20, 5, number_format((float)$line['precioventa'], 2, ',', '.'), '', 0, 'R'); 
+                $this->Cell(15, 5, ($line['descuento'] > 0) ? $line['descuento']:'', 0, 0, 'R'); 
+                $this->Cell(10, 5, ($line['poriva'] > 0) ? $line['poriva']:'', '', 0, 'R'); 
                 $this->Cell(25, 5, ($line['liquidolinea'] > 0) ? number_format((float)$line['liquidolinea'], 2, ',', '.'):'', '', 0, 'R');
             
             // Counters
@@ -307,11 +315,12 @@ class PdfInvoice extends Fpdf
     {
         $this->SetY(80);
         $this->SetFont('Arial', 'B', 9);
-        $this->Cell(35, 10, utf8_decode($this->referencia), 'TB', 0, 'L');
+        $this->Cell(31, 10, utf8_decode($this->referencia), 'TB', 0, 'L');
         $this->Cell(70, 10, utf8_decode($this->descripcion), 'TB', 0, 'L');
         $this->Cell(20, 10, utf8_decode($this->cantidad), 'TB', 0, 'R');
-        $this->Cell(28, 10, utf8_decode($this->preciounitario), 'TB', 0, 'R');
-        $this->Cell(13, 10, utf8_decode($this->pordescuento), 'TB', 0, 'R');
+        $this->Cell(20, 10, utf8_decode($this->preciounitario), 'TB', 0, 'R');
+        $this->Cell(15, 10, utf8_decode($this->pordescuento), 'TB', 0, 'R');
+        $this->Cell(10, 10, utf8_decode($this->iva), 'TB', 0, 'R');
         $this->Cell(25, 10, utf8_decode($this->totaleuros), 'TB', 0, 'R');
         $this->SetY($this->GetY() + 11);
     }

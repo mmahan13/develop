@@ -29,7 +29,7 @@ return [
     |
     */
 
-    'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
+    'host' => env('MAIL_HOST', 'debugmail.io'),
 
     /*
     |--------------------------------------------------------------------------
@@ -59,6 +59,16 @@ return [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
+
+    'from_facturas' => [
+        'address' => env('MAIL_FACTURAS_TO_EMAIL'), 
+        'name' => env('MAIL_EMPRESA_FROM_NAME'),
+    ], 
+
+    'bcc_mantenimiento' => [
+        'address' => env('MAIL_BCC_MANTENIMIENTO_EMAIL'), 
+        'name' => env('MAIL_BCC_MANTENIMIENTO_NAME'),
+    ],  
 
     /*
     |--------------------------------------------------------------------------

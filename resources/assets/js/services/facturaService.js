@@ -61,17 +61,16 @@ erp.service('facturaService', ['$http','FileSaver', '$rootScope', function ($htt
         return $http.get('/tipo/factura');
     }
 
-    /*this.crearPDF = function(data)
+    this.enviarPDF = function(data)
     {
         if(angular.isObject(data))
         {
-            return $http.post('/crear/pdf', data);
+            return $http.post('/send/pdf', data);
         }
-    }*/
+    }
 
     this.crearPDF = function (data) 
     {
-        console.log(data);
         if(angular.isObject(data))
         {
                 var numerofactura = data.facturacabecera.numerofactura;

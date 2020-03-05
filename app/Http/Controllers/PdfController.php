@@ -23,8 +23,7 @@ class PdfController extends Controller
         $d['cabecera'] = $request['facturacabecera'];
         $d['lineas'] = $request['articulos'];
         $d['totalesiva'] = $request['totalesiva'];
-        //print_r($d['cabecera']);
-       
+        
         // Make PDF file
         $pdf = new PdfInvoice();
         $pdf->LoadData($d);
@@ -43,40 +42,36 @@ class PdfController extends Controller
 
     public static function reeviarFactura(Request $request)
     {
-        $d['cabecera'] = \DB::select('exec portal_turbomaster_cli.cli.listar_cabecera_factura ?', [$request['idfactura']]);
-        $d['lineas'] = \DB::select('exec portal_turbomaster_cli.cli.listar_lineas_factura ?', [$request['idfactura']]);
-        $idiomamail = $d['cabecera'][0]->siglanacion;
+        $d['cabecera'] = $request['facturacabecera'];
+        $d['lineas'] = $request['articulos'];
+        $d['totalesiva'] = $request['totalesiva'];
 
+        
         $pdf = new PdfInvoice();
         $pdf->LoadData($d);
         $pdf->AddPage();
         $pdf->bodyTable();
 
-
-        if($request['seriefactura'] != ''){
-            $to_factura = $request['invoice'].'/'.$request['seriefactura'].'/'.$request['ejerciciofactura'];
-            $pdf_name = 'Factura_'.$request['invoice'].'_'.$request['seriefactura'].'_'.$request['ejerciciofactura'].'.pdf';
-        }else{
-            $to_factura = $request['invoice'].'/'.$request['ejerciciofactura'];
-            $pdf_name = 'Factura_'.$request['invoice'].'_'.$request['ejerciciofactura'].'.pdf';
-        }
-
-        //$pdf_name = 'Factura_'.$request['invoice'].'.pdf';
+        $to_factura = $d['cabecera']['numerofactura'].'/'. $d['cabecera']['seriefactura'];
+        $pdf_name = 'Factura_'.$d['cabecera']['numerofactura'].'_'.$d['cabecera']['seriefactura'].'.pdf';
+    
 
         $directory = "public/";
         $pdf->Output(storage_path('app/') . $directory . $pdf_name, 'F');
         $adjunto = $directory.$pdf_name;
       
-        //if(!isset($request['email'])){
-           $request['email'] = 'mmahan13@gmail.com';
-        //}
+      
+        if(!isset($d['cabecera']['email'])){
+            $d['cabecera']['email'] = auth()->user()->email;
+        }
     
         $bcc_mantenimiento = config('mail.bcc_mantenimiento.address');
-        if(filter_var($request['email'], FILTER_VALIDATE_EMAIL))
+       
+        if(filter_var($d['cabecera']['email'], FILTER_VALIDATE_EMAIL))
         {
-            Mail::to($request['email'])
+            Mail::to($d['cabecera']['email'])
             ->bcc($bcc_mantenimiento)
-            ->send(new EmailSimpleConAdjuntos($adjunto, $request['razonsocial'], $to_factura, $idiomamail));
+            ->send(new EmailSimpleConAdjuntos($adjunto, $d['cabecera']['razonsocial'], $to_factura, 'ES'));
             
             $response = [
                 'envio' => 'Enviado',
