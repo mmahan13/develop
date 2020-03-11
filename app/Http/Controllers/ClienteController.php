@@ -22,6 +22,7 @@ use App\CabeceraFactura;
 use App\LineasFactura;
 use App\TiposIvas;
 use App\TotalesPorIva;
+use App\User;
 
 
 class ClienteController extends Controller
@@ -221,6 +222,29 @@ class ClienteController extends Controller
         }   
     }
     
+
+    public function newUser(Request $request)
+    {
+        try{
+                
+            $user = new User;
+            $user->rol = 3;
+            $user->name = $request['name'];
+            $user->apellidos = $request['apellidos'];
+            $user->dni = $request['dni'];
+            $user->email = $request['email'];
+            $user->direccion = $request['direccion'];
+            $user->telefono = $request['telefono'];
+            $user->logged = 1;
+            $user->password = Hash::make($request['password']);
+            $user->save();
+            
+            return $user;
+           
+        }catch(Exception $e){
+                return response('Error',500);
+        }   
+    }
 
     /* public function getDomiciliosClientes(Request $request)
     {

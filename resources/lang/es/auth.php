@@ -18,7 +18,7 @@ return [
         'Demasiados intentos de acceso.
             Por fabor pruebe detro de :seconds segundos.',
     'login' => 'Acceso',
-    'email' => 'Dirección E-Mail',
+    'email' => 'Email',
     'passw' => 'Contraseña',
     'remember' => 'Recordarme',
     'forgot' => '¿Ha olvidado su contraseña?',

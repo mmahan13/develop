@@ -9,8 +9,10 @@
          <menu-element name="Menu" default="listado_usuarios">
                 <menu-item name="Mis clientes" panel="listado_usuarios"></menu-item>
                 <menu-item name="Mis productos" panel="lista_articulos"></menu-item>
-                <menu-item name="Crear factura" panel="nueva_factura"></menu-item>
-                <menu-item name="Listado Facturas" panel="listado_facturas_clientes"></menu-item>
+                @if(Auth::user()->user_clientes != 0 && Auth::user()->user_productos != 0)
+                   <menu-item name="Crear factura" panel="nueva_factura"></menu-item>
+                   <menu-item name="Listado Facturas" panel="listado_facturas_clientes"></menu-item>
+                @endif
         </menu-element>
        
         

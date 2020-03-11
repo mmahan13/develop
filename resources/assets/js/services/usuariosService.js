@@ -27,6 +27,14 @@ erp.service('usuariosService', ['$http','FileSaver','$rootScope', function ($htt
         return $http.get('/get/productos');
     };
 
+    
+    this.newUser = function (data) 
+    {
+        if(angular.isObject(data)){
+            return $http.post('/new/user', data);
+        }
+    };
+
     /*this.getCabeceraIvas = function () {
         return $http.post('/get/cabevera/ivas');
     };

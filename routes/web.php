@@ -50,6 +50,8 @@ Route::post('/login', 'Auth\LoginController@login');
 Auth::routes();
 Route::post('/first/login/change', 'UserController@firstLogin');
 
+//newuser
+Route::post('/new/user', 'ClienteController@newUser');
 
 //clientes
 Route::get('/listado/usuarios', 'ClienteController@getListadoUsuarios');

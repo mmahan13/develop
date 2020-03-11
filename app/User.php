@@ -11,9 +11,11 @@ use Illuminate\Support\Facades\Log;
 class User extends Authenticatable
 {
     use Notifiable;
-    protected $dateFormat = 'Y-m-d H:i:s.000';
+   // protected $dateFormat = 'Y-m-d H:i:s.000';
     protected $appends = ['role_companies', 'expenses'];
 
+    public $timestamps = false;
+    protected $table = 'portal.users';
     /**
      * @param string $token
      */
@@ -28,9 +30,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password', 'dni', 'client_id'
-    ];
+    protected $fillable = ['rol', 'name', 'apellidos','dni', 'email','direccion', 'telefono', 'logged', 'password'];
 
     /**
      * The attributes that should be hidden for arrays.
